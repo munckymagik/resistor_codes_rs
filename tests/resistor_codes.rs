@@ -37,3 +37,19 @@ fn it_is_case_insensitive() {
     assert_that!(ohms_value_to_float("1m").unwrap(), is(equal_to(1_000_000.0)));
     assert_that!(ohms_value_to_float("1g").unwrap(), is(equal_to(1_000_000_000.0)));
 }
+
+#[test]
+#[ignore]
+fn it_successfully_parses_fractions() {
+    assert_that!(ohms_value_to_float("1.23456").unwrap(), is(equal_to(1.23456)));
+    assert_that!(ohms_value_to_float("1.23456K").unwrap(), is(equal_to(1_234.56)));
+}
+
+#[test]
+fn it_support_letter_and_digit_code_iec_60062() {
+    assert_that!(ohms_value_to_float("1R23456").unwrap(), is(equal_to(1.23456)));
+    assert_that!(ohms_value_to_float("1K23456").unwrap(), is(equal_to(1_234.56)));
+    assert_that!(ohms_value_to_float("1M23456").unwrap(), is(equal_to(1_234_560.0)));
+    assert_that!(ohms_value_to_float("1G23456").unwrap(), is(equal_to(1_234_560_000.0)));
+    assert_that!(ohms_value_to_float("1T23456").unwrap(), is(equal_to(1_234_560_000_000.0)));
+}
