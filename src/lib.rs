@@ -10,8 +10,14 @@ impl ResistorCode {
 }
 
 pub fn ohms_value_to_float(value_string: &str) -> Result<f32, ParseFloatError> {
-    let (value_string, multiplier) = if value_string.to_lowercase().ends_with("k") {
+    let lowercase: String = value_string.to_lowercase();
+
+    let (value_string, multiplier) = if lowercase.ends_with("k") {
         (&value_string[..(value_string.len() - 1)], 1000.0)
+    } else if lowercase.ends_with("m") {
+        (&value_string[..(value_string.len() - 1)], 1_000_000.0)
+    } else if lowercase.ends_with("g") {
+        (&value_string[..(value_string.len() - 1)], 1_000_000_000.0)
     } else {
         (value_string, 1.0)
     };

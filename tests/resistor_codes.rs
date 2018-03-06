@@ -18,6 +18,22 @@ fn it_converts_from_ohms() {
 
 #[test]
 fn it_converts_from_kilohms() {
-    assert_that!(ohms_value_to_float("1k").unwrap(), is(equal_to(1000.0)));
     assert_that!(ohms_value_to_float("2K").unwrap(), is(equal_to(2000.0)));
+}
+
+#[test]
+fn it_converts_from_megohms() {
+    assert_that!(ohms_value_to_float("2M").unwrap(), is(equal_to(2_000_000.0)));
+}
+
+#[test]
+fn it_converts_from_gigaohms() {
+    assert_that!(ohms_value_to_float("2G").unwrap(), is(equal_to(2_000_000_000.0)));
+}
+
+#[test]
+fn it_is_case_insensitive() {
+    assert_that!(ohms_value_to_float("1k").unwrap(), is(equal_to(1000.0)));
+    assert_that!(ohms_value_to_float("1m").unwrap(), is(equal_to(1_000_000.0)));
+    assert_that!(ohms_value_to_float("1g").unwrap(), is(equal_to(1_000_000_000.0)));
 }
