@@ -17,7 +17,6 @@ fn it_converts_from_ohms() {
 }
 
 #[test]
-#[ignore]
 fn it_converts_from_kilohms() {
     assert_that!(ohms_value_to_float("1k").unwrap(), is(equal_to(1000.0)));
     assert_that!(ohms_value_to_float("2K").unwrap(), is(equal_to(2000.0)));
