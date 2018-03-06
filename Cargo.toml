@@ -1,6 +1,7 @@
 [package]
+authors = ["Dan Munckton <dan@cultivatehq.com>"]
 name = "resistor_codes"
 version = "0.1.0"
-authors = ["Dan Munckton <dan@cultivatehq.com>"]
 
 [dependencies]
+hamcrest = "0.1.5"
