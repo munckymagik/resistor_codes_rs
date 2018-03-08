@@ -15,5 +15,6 @@ Domain:
 Crates/code:
 
 * https://github.com/ujh/hamcrest-rust
+* https://docs.rs/hamcrest/0.1.5/hamcrest/
 * https://doc.rust-lang.org/src/core/num/dec2flt/mod.rs.html#140-142
 * https://doc.rust-lang.org/std/primitive.str.html
