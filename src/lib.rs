@@ -17,13 +17,13 @@ pub fn ohms_value_to_float(value_string: &str) -> Result<f32, ParseError> {
 
 fn get_multiplier(letter_code: u8) -> Result<f32, ParseError> {
     match letter_code.to_ascii_uppercase() {
-        b'L'        => Ok(1e-3),
-        b'R' | b'.' => Ok(1e0),
-        b'K'        => Ok(1e3),
-        b'M'        => Ok(1e6),
-        b'G'        => Ok(1e9),
-        b'T'        => Ok(1e12),
-        _           => Err(ParseError::UnsupportedLetterCode(letter_code.into()))
+        b'L' => Ok(1e-3),
+        b'R' => Ok(1e0),
+        b'K' => Ok(1e3),
+        b'M' => Ok(1e6),
+        b'G' => Ok(1e9),
+        b'T' => Ok(1e12),
+        _    => Err(ParseError::UnsupportedLetterCode(letter_code.into()))
     }
 }
 
