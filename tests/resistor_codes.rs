@@ -39,7 +39,6 @@ fn it_is_case_insensitive() {
 }
 
 #[test]
-#[ignore]
 fn it_successfully_parses_fractions() {
     assert_that!(ohms_value_to_float("1.23456").unwrap(), is(equal_to(1.23456)));
     assert_that!(ohms_value_to_float("1.23456K").unwrap(), is(equal_to(1_234.56)));
