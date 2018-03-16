@@ -46,6 +46,7 @@ fn it_successfully_parses_fractions() {
 
 #[test]
 fn it_support_letter_and_digit_code_iec_60062() {
+    assert_that!(ohms_value_to_float("1L23456").unwrap(), is(equal_to(0.00123456)));
     assert_that!(ohms_value_to_float("1R23456").unwrap(), is(equal_to(1.23456)));
     assert_that!(ohms_value_to_float("1K23456").unwrap(), is(equal_to(1_234.56)));
     assert_that!(ohms_value_to_float("1M23456").unwrap(), is(equal_to(1_234_560.0)));
