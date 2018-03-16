@@ -35,32 +35,32 @@ fn parse(input: &str) -> Result<(f32, u8), ParseError>  {
         }
     };
 
-    let mut number: Vec<u8> = Vec::with_capacity(input.len());
+    let mut buffer: Vec<u8> = Vec::with_capacity(input.len());
 
     let s = input.as_bytes();
     let mut letter = b'R';
     let mut i = 0;
 
-    read_digits_into_vec(&mut number, s, &mut i);
+    read_digits_into_vec(&mut buffer, s, &mut i);
 
     if i < s.len() {
         if b'.' == s[i] {
-            number.push(s[i]);
+            buffer.push(s[i]);
         } else {
-            number.push(b'.');
+            buffer.push(b'.');
             letter = s[i];
         }
         i += 1;
 
-        read_digits_into_vec(&mut number, s, &mut i);
+        read_digits_into_vec(&mut buffer, s, &mut i);
 
         if i < s.len() {
             letter = s[i];
         }
     }
 
-    let value_string = str::from_utf8(&number).map_err(ParseError::BytesToUtf8)?;
-    let float_value = value_string.parse::<f32>().map_err(ParseError::StrToFloat)?;
+    let number_str = str::from_utf8(&buffer).map_err(ParseError::BytesToUtf8)?;
+    let float_value = number_str.parse::<f32>().map_err(ParseError::StrToFloat)?;
 
     Ok((float_value, letter))
 }
