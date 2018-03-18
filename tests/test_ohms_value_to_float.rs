@@ -4,53 +4,57 @@ extern crate resistor_codes;
 use hamcrest::prelude::*;
 use resistor_codes::{ohms_value_to_float, ParseError};
 
+fn check(input: &str, expected: f32) {
+    assert_that!(ohms_value_to_float(input).unwrap(), is(equal_to(expected)));
+}
+
+fn check_err(input: &str, expected: ParseError) {
+    assert_that!(ohms_value_to_float(input).unwrap_err(),
+                 is(equal_to(expected)));
+}
+
 #[test]
 fn it_successfully_parses_integers() {
-    assert_that!(ohms_value_to_float("1").unwrap(), is(equal_to(1.0)));
-    assert_that!(ohms_value_to_float("1L").unwrap(), is(equal_to(0.001)));
-    assert_that!(ohms_value_to_float("1R").unwrap(), is(equal_to(1.0)));
-    assert_that!(ohms_value_to_float("1K").unwrap(), is(equal_to(1_000.0)));
-    assert_that!(ohms_value_to_float("1M").unwrap(), is(equal_to(1_000_000.0)));
-    assert_that!(ohms_value_to_float("1G").unwrap(), is(equal_to(1_000_000_000.0)));
-    assert_that!(ohms_value_to_float("1T").unwrap(), is(equal_to(1_000_000_000_000.0)));
+    check("1", 1.0);
+    check("1L", 0.001);
+    check("1R", 1.0);
+    check("1K", 1_000.0);
+    check("1M", 1_000_000.0);
+    check("1G", 1_000_000_000.0);
+    check("1T", 1_000_000_000_000.0);
 }
 
 #[test]
 fn it_successfully_parses_floats() {
-    assert_that!(ohms_value_to_float("1.23456").unwrap(), is(equal_to(1.23456)));
-    assert_that!(ohms_value_to_float("1.23456L").unwrap(), is(equal_to(0.00123456)));
-    assert_that!(ohms_value_to_float("1.23456R").unwrap(), is(equal_to(1.23456)));
-    assert_that!(ohms_value_to_float("1.23456K").unwrap(), is(equal_to(1_234.56)));
-    assert_that!(ohms_value_to_float("1.23456M").unwrap(), is(equal_to(1_234_560.0)));
-    assert_that!(ohms_value_to_float("1.23456G").unwrap(), is(equal_to(1_234_560_000.0)));
-    assert_that!(ohms_value_to_float("1.23456T").unwrap(), is(equal_to(1_234_560_000_000.0)));
+    check("1.23456", 1.23456);
+    check("1.23456L", 0.00123456);
+    check("1.23456R", 1.23456);
+    check("1.23456K", 1_234.56);
+    check("1.23456M", 1_234_560.0);
+    check("1.23456G", 1_234_560_000.0);
+    check("1.23456T", 1_234_560_000_000.0);
 }
 
 #[test]
 fn it_supports_letter_and_digit_code_iec_60062() {
-    assert_that!(ohms_value_to_float("1L23456").unwrap(), is(equal_to(0.00123456)));
-    assert_that!(ohms_value_to_float("1R23456").unwrap(), is(equal_to(1.23456)));
-    assert_that!(ohms_value_to_float("1K23456").unwrap(), is(equal_to(1_234.56)));
-    assert_that!(ohms_value_to_float("1M23456").unwrap(), is(equal_to(1_234_560.0)));
-    assert_that!(ohms_value_to_float("1G23456").unwrap(), is(equal_to(1_234_560_000.0)));
-    assert_that!(ohms_value_to_float("1T23456").unwrap(), is(equal_to(1_234_560_000_000.0)));
+    check("1L23456", 0.00123456);
+    check("1R23456", 1.23456);
+    check("1K23456", 1_234.56);
+    check("1M23456", 1_234_560.0);
+    check("1G23456", 1_234_560_000.0);
+    check("1T23456", 1_234_560_000_000.0);
 }
 
 #[test]
 fn it_is_case_insensitive() {
-    assert_that!(ohms_value_to_float("1k").unwrap(), is(equal_to(1000.0)));
-    assert_that!(ohms_value_to_float("1.0m").unwrap(), is(equal_to(1_000_000.0)));
-    assert_that!(ohms_value_to_float("1g2").unwrap(), is(equal_to(1_200_000_000.0)));
+    check("1k", 1000.0);
+    check("1.0m", 1_000_000.0);
+    check("1g2", 1_200_000_000.0);
 }
 
 #[test]
 fn it_handles_invalid_letter_codes() {
-    assert_that!(ohms_value_to_float("1%").unwrap_err(),
-                 is(equal_to(ParseError::UnsupportedLetterCode('%'))));
-
-    assert_that!(ohms_value_to_float("1x2").unwrap_err(),
-                 is(equal_to(ParseError::UnsupportedLetterCode('x'))));
-
-    assert_that!(ohms_value_to_float("1,2").unwrap_err(),
-                 is(equal_to(ParseError::UnsupportedLetterCode(','))));
+    check_err("1%", ParseError::UnsupportedLetterCode('%'));
+    check_err("1x2", ParseError::UnsupportedLetterCode('x'));
+    check_err("1,2", ParseError::UnsupportedLetterCode(','));
 }

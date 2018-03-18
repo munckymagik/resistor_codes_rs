@@ -71,47 +71,55 @@ mod test {
 
     #[test]
     fn test_parser() {
-        assert_eq!(parse("1"), Ok((1.0, b'R')));
-        assert_eq!(parse("1.0"), Ok((1.0, b'R')));
-        assert_eq!(parse("1."), Ok((1.0, b'R')));
-        assert_eq!(parse("1.2"), Ok((1.2, b'R')));
+        fn check(input: &str, expected: (f32, u8)) {
+            assert_eq!(parse(input), Ok(expected));
+        }
 
-        assert_eq!(parse("1.2R"), Ok((1.2, b'R')));
-        assert_eq!(parse("1.R"), Ok((1.0, b'R')));
-        assert_eq!(parse("1R"), Ok((1.0, b'R')));
-        assert_eq!(parse("1R2"), Ok((1.2, b'R')));
-        assert_eq!(parse("12R34"), Ok((12.34, b'R')));
+        check("1", (1.0, b'R'));
+        check("1.0", (1.0, b'R'));
+        check("1.", (1.0, b'R'));
+        check("1.2", (1.2, b'R'));
 
-        assert_eq!(parse("1L1"), Ok((1.1, b'L')));
-        assert_eq!(parse("1R1"), Ok((1.1, b'R')));
-        assert_eq!(parse("1K1"), Ok((1.1, b'K')));
-        assert_eq!(parse("1M1"), Ok((1.1, b'M')));
-        assert_eq!(parse("1G1"), Ok((1.1, b'G')));
-        assert_eq!(parse("1T1"), Ok((1.1, b'T')));
+        check("1.2R", (1.2, b'R'));
+        check("1.R", (1.0, b'R'));
+        check("1R", (1.0, b'R'));
+        check("1R2", (1.2, b'R'));
+        check("12R34", (12.34, b'R'));
 
-        assert_eq!(parse("1.1L"), Ok((1.1, b'L')));
-        assert_eq!(parse("1.1R"), Ok((1.1, b'R')));
-        assert_eq!(parse("1.1K"), Ok((1.1, b'K')));
-        assert_eq!(parse("1.1M"), Ok((1.1, b'M')));
-        assert_eq!(parse("1.1G"), Ok((1.1, b'G')));
-        assert_eq!(parse("1.1T"), Ok((1.1, b'T')));
+        check("1L1", (1.1, b'L'));
+        check("1R1", (1.1, b'R'));
+        check("1K1", (1.1, b'K'));
+        check("1M1", (1.1, b'M'));
+        check("1G1", (1.1, b'G'));
+        check("1T1", (1.1, b'T'));
+
+        check("1.1L", (1.1, b'L'));
+        check("1.1R", (1.1, b'R'));
+        check("1.1K", (1.1, b'K'));
+        check("1.1M", (1.1, b'M'));
+        check("1.1G", (1.1, b'G'));
+        check("1.1T", (1.1, b'T'));
     }
 
     #[test]
     fn test_get_multiplier() {
-        assert_eq!(get_multiplier(b'L'), Ok(0.001));
-        assert_eq!(get_multiplier(b'R'), Ok(1.0));
-        assert_eq!(get_multiplier(b'K'), Ok(1_000.0));
-        assert_eq!(get_multiplier(b'M'), Ok(1_000_000.0));
-        assert_eq!(get_multiplier(b'G'), Ok(1_000_000_000.0));
-        assert_eq!(get_multiplier(b'T'), Ok(1_000_000_000_000.0));
+        fn check(input: u8, expected: f32) {
+            assert_eq!(get_multiplier(input), Ok(expected));
+        }
 
-        assert_eq!(get_multiplier(b'l'), Ok(0.001));
-        assert_eq!(get_multiplier(b'r'), Ok(1.0));
-        assert_eq!(get_multiplier(b'k'), Ok(1_000.0));
-        assert_eq!(get_multiplier(b'm'), Ok(1_000_000.0));
-        assert_eq!(get_multiplier(b'g'), Ok(1_000_000_000.0));
-        assert_eq!(get_multiplier(b't'), Ok(1_000_000_000_000.0));
+        check(b'L', 0.001);
+        check(b'R', 1.0);
+        check(b'K', 1_000.0);
+        check(b'M', 1_000_000.0);
+        check(b'G', 1_000_000_000.0);
+        check(b'T', 1_000_000_000_000.0);
+
+        check(b'l', 0.001);
+        check(b'r', 1.0);
+        check(b'k', 1_000.0);
+        check(b'm', 1_000_000.0);
+        check(b'g', 1_000_000_000.0);
+        check(b't', 1_000_000_000_000.0);
 
         assert_eq!(get_multiplier(b'%'), Err(ParseError::UnsupportedLetterCode('%')));
     }
