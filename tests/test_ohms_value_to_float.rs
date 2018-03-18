@@ -1,16 +1,13 @@
 extern crate resistor_codes;
-#[macro_use] extern crate hamcrest;
 
-use hamcrest::prelude::*;
 use resistor_codes::{ohms_value_to_float, ParseError};
 
 fn check(input: &str, expected: f32) {
-    assert_that!(ohms_value_to_float(input).unwrap(), is(equal_to(expected)));
+    assert_eq!(ohms_value_to_float(input), Ok(expected));
 }
 
 fn check_err(input: &str, expected: ParseError) {
-    assert_that!(ohms_value_to_float(input).unwrap_err(),
-                 is(equal_to(expected)));
+    assert_eq!(ohms_value_to_float(input), Err(expected));
 }
 
 #[test]

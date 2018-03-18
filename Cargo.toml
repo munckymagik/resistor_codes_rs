@@ -2,6 +2,3 @@
 authors = ["Dan Munckton <dan@cultivatehq.com>"]
 name = "resistor_codes"
 version = "0.1.0"
-
-[dependencies]
-hamcrest = "0.1.5"
