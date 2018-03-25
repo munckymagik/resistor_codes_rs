@@ -2,6 +2,8 @@ extern crate resistor_codes;
 
 use resistor_codes::{ohms_value_to_float, ParseError};
 
+mod fixtures;
+
 fn check(input: &str, expected: f32) {
     assert_eq!(ohms_value_to_float(input), Ok(expected));
 }
@@ -54,4 +56,11 @@ fn it_handles_invalid_letter_codes() {
     check_err("1%", ParseError::UnsupportedLetterCode('%'));
     check_err("1x2", ParseError::UnsupportedLetterCode('x'));
     check_err("1,2", ParseError::UnsupportedLetterCode(','));
+}
+
+#[test]
+fn test_standard_e_series_resistor_values() {
+    for &(expected_float_value, ohms_str) in fixtures::E_SERIES_SAMPLES {
+        check(ohms_str, expected_float_value);
+    }
 }
