@@ -16,27 +16,43 @@ pub fn ohms_value_to_float(value_string: &str) -> Result<f32, ParseError> {
 }
 
 pub fn float_value_to_ohms(value: f32) -> String {
-    if value == 0.0 {
-        return "0R".to_owned();
+    let resistance_value = ResistanceValue::from_float(value);
+
+    match resistance_value {
+        ResistanceValue::Ohms(ohms) => ohms.to_string() + "R",
+        ResistanceValue::Coded(ohms, code) => format!("{}{}", ohms, char::from(code)),
     }
+}
 
-    static DENOMINATORS_CODES: [(f32, char); 6] = [
-        (1e12, 'T'),
-        (1e9, 'G'),
-        (1e6, 'M'),
-        (1e3, 'K'),
-        (1e0, 'R'),
-        (1e-3, 'L'),
-    ];
+enum ResistanceValue {
+    Ohms(f32),
+    Coded(f32, u8),
+}
 
-    for &(denominator, code) in &DENOMINATORS_CODES {
-        let result = value / denominator;
-        if result >= 1.0 {
-            return format!("{}{}", result, code);
+impl ResistanceValue {
+    fn from_float(value: f32) -> ResistanceValue {
+        if value == 0.0 {
+            return ResistanceValue::Ohms(value);
         }
-    }
 
-    value.to_string() + "R"
+        static DENOMINATORS_CODES: [(f32, u8); 6] = [
+            (1e12, b'T'),
+            (1e9, b'G'),
+            (1e6, b'M'),
+            (1e3, b'K'),
+            (1e0, b'R'),
+            (1e-3, b'L'),
+        ];
+
+        for &(denominator, code) in &DENOMINATORS_CODES {
+            let result = value / denominator;
+            if result >= 1.0 {
+                return ResistanceValue::Coded(result, code);
+            }
+        }
+
+        ResistanceValue::Ohms(value)
+    }
 }
 
 fn get_multiplier(letter_code: u8) -> Result<f32, ParseError> {
