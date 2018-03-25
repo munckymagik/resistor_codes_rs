@@ -15,6 +15,30 @@ pub fn ohms_value_to_float(value_string: &str) -> Result<f32, ParseError> {
     Ok(number * multiplier)
 }
 
+pub fn float_value_to_ohms(value: f32) -> String {
+    if value == 0.0 {
+        return "0R".to_owned();
+    }
+
+    static DENOMINATORS_CODES: [(f32, char); 6] = [
+        (1e12, 'T'),
+        (1e9, 'G'),
+        (1e6, 'M'),
+        (1e3, 'K'),
+        (1e0, 'R'),
+        (1e-3, 'L'),
+    ];
+
+    for &(denominator, code) in &DENOMINATORS_CODES {
+        let result = value / denominator;
+        if result >= 1.0 {
+            return format!("{}{}", result, code);
+        }
+    }
+
+    value.to_string() + "R"
+}
+
 fn get_multiplier(letter_code: u8) -> Result<f32, ParseError> {
     match letter_code.to_ascii_uppercase() {
         b'L' => Ok(1e-3),
