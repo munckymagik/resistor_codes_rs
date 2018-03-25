@@ -5,7 +5,7 @@ use std::str::{self, Utf8Error};
 pub enum ParseError {
     StrToFloat(ParseFloatError),
     BytesToUtf8(Utf8Error),
-    UnsupportedLetterCode(char)
+    UnsupportedLetterCode(char),
 }
 
 pub fn ohms_value_to_float(value_string: &str) -> Result<f32, ParseError> {
@@ -23,11 +23,11 @@ fn get_multiplier(letter_code: u8) -> Result<f32, ParseError> {
         b'M' => Ok(1e6),
         b'G' => Ok(1e9),
         b'T' => Ok(1e12),
-        _    => Err(ParseError::UnsupportedLetterCode(letter_code.into()))
+        _ => Err(ParseError::UnsupportedLetterCode(letter_code.into())),
     }
 }
 
-fn parse(input: &str) -> Result<(f32, u8), ParseError>  {
+fn parse(input: &str) -> Result<(f32, u8), ParseError> {
     fn read_digits_into_vec(buffer: &mut Vec<u8>, s: &[u8], i: &mut usize) {
         while *i < s.len() && b'0' <= s[*i] && s[*i] <= b'9' {
             buffer.push(s[*i]);
@@ -121,6 +121,9 @@ mod test {
         check(b'g', 1_000_000_000.0);
         check(b't', 1_000_000_000_000.0);
 
-        assert_eq!(get_multiplier(b'%'), Err(ParseError::UnsupportedLetterCode('%')));
+        assert_eq!(
+            get_multiplier(b'%'),
+            Err(ParseError::UnsupportedLetterCode('%'))
+        );
     }
 }
