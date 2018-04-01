@@ -1,5 +1,5 @@
 use std::num::ParseFloatError;
-use std::str::{self, Utf8Error};
+use std::str::{self, FromStr, Utf8Error};
 
 #[derive(Debug, PartialEq)]
 pub enum ParseError {
@@ -24,7 +24,8 @@ pub fn float_value_to_ohms(value: f32) -> String {
     }
 }
 
-enum ResistanceValue {
+#[derive(Debug, PartialEq)]
+pub enum ResistanceValue {
     Ohms(f32),
     Coded(f32, u8),
 }
@@ -52,6 +53,19 @@ impl ResistanceValue {
         }
 
         ResistanceValue::Ohms(value)
+    }
+
+    pub fn try_from_str(value_string: &str) -> Result<Self, ParseError> {
+        let (number, letter_code) = parse(&value_string)?;
+        Ok(ResistanceValue::Coded(number, letter_code))
+    }
+}
+
+impl FromStr for ResistanceValue {
+    type Err = ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Self::try_from_str(s)
     }
 }
 
