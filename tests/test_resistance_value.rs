@@ -29,3 +29,10 @@ fn test_from_str() {
     assert!(ResistanceValue::from_str("abc").is_err());
     assert!("abc".parse::<ResistanceValue>().is_err());
 }
+
+#[test]
+fn test_from_float() {
+    assert_eq!(ResistanceValue::from(1.2345), ResistanceValue::Coded(1.2345, b'R'));
+    let rv: ResistanceValue = 1.2345.into();
+    assert_eq!(rv, ResistanceValue::Coded(1.2345, b'R'));
+}

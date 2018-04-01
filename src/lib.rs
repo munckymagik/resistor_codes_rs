@@ -69,6 +69,12 @@ impl FromStr for ResistanceValue {
     }
 }
 
+impl From<f32> for ResistanceValue {
+    fn from(f: f32) -> Self {
+        Self::from_float(f)
+    }
+}
+
 fn get_multiplier(letter_code: u8) -> Result<f32, ParseError> {
     match letter_code.to_ascii_uppercase() {
         b'L' => Ok(1e-3),
